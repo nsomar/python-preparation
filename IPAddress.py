@@ -1,5 +1,6 @@
 __author__ = 'omarsubhiabdelhafith'
-
+from binascii import *
+from itertools import *
 
 """ IPAddress
     IPAddress represents an IP address.
@@ -45,10 +46,18 @@ class IPAddress(object):
     #   - IPAddress of 1.2.3.4 belongs to networks 1/8, 1.100/8, 1.2/16, 1.2.3/24
     def is_on_network(self, network):
         ip = IPAddress(network)
-        components_to_factor = ip.network / 8
-        first_components = self.ip_components[0:components_to_factor]
-        second_components = ip.ip_components[0:components_to_factor]
-        return first_components == second_components
+        binary_mask = int(ip.cidr_mask(), 2)
+
+        # Compare by bitwise and the mask and the ip
+        binary_ip1 = int(self.binary_ip_string(), 2)
+        binary_ip2 = int(ip.binary_ip_string(), 2)
+        return (binary_ip1 & binary_mask) == (binary_ip2 & binary_mask)
+
+    def cidr_mask(self):
+        return ("1" * self.network) + ("0" * (32 - self.network))
+
+    def binary_ip_string(self):
+        return "".join(map(lambda x: '{0:08b}'.format(x), self.ip_components))
 
     # Internal methods
     def is_cidr(self):
@@ -96,7 +105,3 @@ class IPAddress(object):
         # check network
         if network > 32 or network < 0:
             raise TypeError("Network value of {0} is not correct".format(network))
-
-        # check network
-        if (self.network % 8) != 0:
-            raise TypeError("Network value of {0} must be one of the values 8, 16, 24, 32".format(network))

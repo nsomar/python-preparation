@@ -76,11 +76,6 @@ class TestIPAddress(unittest.TestCase):
         self.assertRaises(TypeError, lambda: IPAddress(ip))
 
         # When
-        ip = "1.1.1.1/25"
-        # Then
-        self.assertRaises(TypeError, lambda: IPAddress(ip))
-
-        # When
         ip = "1.1.1.1/xxxx"
         # Then
         self.assertRaises(ValueError, lambda: IPAddress(ip))
