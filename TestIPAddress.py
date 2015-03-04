@@ -1,7 +1,7 @@
 __author__ = 'omarsubhiabdelhafith'
 
 import unittest
-from IPAddress import *
+from IPAddress import IPAddress
 
 
 class TestIPAddress(unittest.TestCase):
